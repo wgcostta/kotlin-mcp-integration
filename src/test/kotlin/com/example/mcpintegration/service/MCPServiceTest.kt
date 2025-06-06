@@ -5,6 +5,7 @@ import com.example.mcpintegration.model.ToolExecutionRequest
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Test
+import org.springframework.core.ParameterizedTypeReference
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.WebClientResponseException
 import reactor.core.publisher.Mono
@@ -31,7 +32,7 @@ class MCPServiceTest {
         every { webClient.get() } returns requestHeadersUriSpec
         every { requestHeadersUriSpec.uri("/mcp/files/search?query={query}", query) } returns requestHeadersUriSpec
         every { requestHeadersUriSpec.retrieve() } returns responseSpec
-        every { responseSpec.bodyToMono(List::class.java as Class<List<FileResponse>>) } returns Mono.just(fileResponse)
+        every { responseSpec.bodyToMono(any<ParameterizedTypeReference<List<FileResponse>>>()) } returns Mono.just(fileResponse)
 
         val result = mcpService.searchFiles(query)
 
@@ -54,7 +55,7 @@ class MCPServiceTest {
         every { webClient.get() } returns requestHeadersUriSpec
         every { requestHeadersUriSpec.uri("/mcp/files/search?query={query}", query) } returns requestHeadersUriSpec
         every { requestHeadersUriSpec.retrieve() } returns responseSpec
-        every { responseSpec.bodyToMono(List::class.java as Class<List<FileResponse>>) } returns Mono.error(error)
+        every { responseSpec.bodyToMono(any<ParameterizedTypeReference<List<FileResponse>>>()) } returns Mono.error(error)
 
         val result = mcpService.searchFiles(query)
 
