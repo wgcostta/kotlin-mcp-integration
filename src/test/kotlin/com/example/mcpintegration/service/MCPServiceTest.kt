@@ -33,6 +33,8 @@ class MCPServiceTest {
         every { requestHeadersUriSpec.uri("/mcp/files/search?query={query}", query) } returns requestHeadersUriSpec
         every { requestHeadersUriSpec.retrieve() } returns responseSpec
         every { responseSpec.bodyToMono(any<ParameterizedTypeReference<List<FileResponse>>>()) } returns Mono.just(fileResponse)
+        // Alternativa mais genérica:
+        // every { responseSpec.bodyToMono(any<Any>()) } returns Mono.just(fileResponse)
 
         val result = mcpService.searchFiles(query)
 
@@ -73,7 +75,7 @@ class MCPServiceTest {
         every { requestBodyUriSpec.uri("/mcp/tools/execute") } returns requestBodySpec
         every { requestBodySpec.bodyValue(toolRequest) } returns requestHeadersUriSpec
         every { requestHeadersUriSpec.retrieve() } returns responseSpec
-        every { responseSpec.bodyToMono(String::class.java) } returns Mono.just(responseBody)
+        every { responseSpec.bodyToMono(any<ParameterizedTypeReference<String>>()) } returns Mono.just(responseBody)
 
         val result = mcpService.executeTool(toolRequest)
 
@@ -97,7 +99,7 @@ class MCPServiceTest {
         every { requestBodyUriSpec.uri("/mcp/tools/execute") } returns requestBodySpec
         every { requestBodySpec.bodyValue(toolRequest) } returns requestHeadersUriSpec
         every { requestHeadersUriSpec.retrieve() } returns responseSpec
-        every { responseSpec.bodyToMono(String::class.java) } returns Mono.error(error)
+        every { responseSpec.bodyToMono(any<ParameterizedTypeReference<String>>()) } returns Mono.error(error)
 
         val result = mcpService.executeTool(toolRequest)
 
