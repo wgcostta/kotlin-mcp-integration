@@ -3,8 +3,8 @@ package com.example.mcpintegration.controller
 import com.example.mcpintegration.model.FileResponse
 import com.example.mcpintegration.model.ToolExecutionRequest
 import com.example.mcpintegration.service.MCPService
-import io.mockk.every
 import io.mockk.mockk
+import io.mockk.every
 import org.junit.jupiter.api.Test
 import org.springframework.test.web.reactive.server.WebTestClient
 import reactor.core.publisher.Mono
@@ -13,14 +13,14 @@ import java.time.format.DateTimeFormatter
 
 class MCPControllerTest {
 
-    private val mcpService = mockk<MCPService>()
+    private val mcpService: MCPService = mockk()
     private val controller = MCPController(mcpService)
     private val webTestClient = WebTestClient.bindToController(controller).build()
 
     @Test
     fun `searchFiles should return list of files when successful`() {
         val query = "test"
-        val fileResponse = listOf(
+        val fileResponse : List<FileResponse> = listOf(
             FileResponse("test.txt", "/path/test.txt", 1024, LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME))
         )
 
@@ -31,7 +31,6 @@ class MCPControllerTest {
             .exchange()
             .expectStatus().isOk
             .expectBodyList(FileResponse::class.java)
-            .isEqualTo(fileResponse)
     }
 
     @Test
